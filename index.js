@@ -19,7 +19,8 @@ function Clock() {
   var id,
     city,
     zone,
-    time_adj = [];
+    time_adj = [],
+    timer = {},
 
   this.getTime = function() {
       var timeDegrees = [];
