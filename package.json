@@ -1,0 +1,33 @@
+{
+  "name": "clocked",
+  "version": "0.3.0",
+  "description": "An analog clock using momentjs, moment-timezone and svg",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/web-mech/clocked.git"
+  },
+  "keywords": [
+    "clock",
+    "timer",
+    "moment",
+    "analog",
+    "clocked"
+  ],
+  "author": "Anthony Datu, Mike P.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/web-mech/clocked/issues"
+  },
+  "homepage": "https://github.com/web-mech/clocked",
+  "dependencies": {
+    "moment-timezone": "^0.4.1"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.4",
+    "chai": "^3.4.1"
+  }
+}
