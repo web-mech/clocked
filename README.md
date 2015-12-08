@@ -26,7 +26,7 @@
 [Example](http://codepen.io/anon/pen/YwPOXO)
 
 Todos:
-  - Tests!
+ 	- Tests!
 	- Make clock instances configurable.
 	- Make clock color configurable.
 	- Instantiate with element.

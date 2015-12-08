@@ -1,6 +1,6 @@
 {
   "name": "clocked",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "An analog clock using momentjs, moment-timezone and svg",
   "main": "index.js",
   "scripts": {
