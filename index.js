@@ -15,6 +15,7 @@
 **/
 var moment = require('moment-timezone'),
   extend = require('util')._extend,
+  format = require('util').format,
   defaults = {
     autoStart: true,
     colors: {
@@ -205,11 +206,14 @@ Clock.prototype.updateHands = function() {
     text = div.querySelectorAll('text'),
     position = div.clientHeight / 2,
     time = this.getTime(),
-    i;
+    hour = time.hour,
+    minute = time.minute,
+    second = time.second,
+    fmt = 'rotate(%s %s %s)';
 
-  hands[0].setAttribute('transform', 'rotate( ' + time.hour + ' ' + position + ' ' + position + ')');
-  hands[1].setAttribute('transform', 'rotate( ' + time.minute + ' ' + position + ' ' + position + ')');
-  hands[2].setAttribute('transform', 'rotate( ' + time.second + ' ' + position + ' ' + position + ')');
+  [hour, minute, second].forEach(function(time, idx) {
+    hands[idx].setAttribute('transform', format(fmt, time, position, position));
+  });
 
   text[0].innerHTML = this.dateTicker();
   text[1].innerHTML = this.dateTicker(true);
@@ -217,15 +221,13 @@ Clock.prototype.updateHands = function() {
   var colors = this.options.colors,
     color = colors[this.dayOrNight()];
 
-  //update hands color
-  for (i = 0; i < hands.length; i++) {
-    hands[i].setAttribute('stroke', color);
-  }
+  hands.forEach(function(hand) {
+    hand.setAttribute('stroke', color);
+  });
 
-  //update texts color
-  text[0].setAttribute('fill', color);
-  text[1].setAttribute('fill', color);
-  text[2].setAttribute('fill', color);
+  text.forEach(function(txt) {
+    txt.setAttribute('fill', color);
+  });
 
   cir[0].setAttribute('stroke', color);
   cir[1].setAttribute('fill', color);
