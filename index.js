@@ -16,6 +16,8 @@
 var moment = require('moment-timezone'),
   extend = require('util')._extend,
   format = require('util').format,
+  components = require('./lib/components'),
+  parse = require('angular-expressions'),
   defaults = {
     autoStart: true,
     colors: {
@@ -89,7 +91,6 @@ Clock.prototype.formatCity = function() {
 Clock.prototype.generate = function() {
   var el = this.el,
     height = el.clientHeight,
-    width = height,
     ns = this.svgNs,
     position = height / 2,
     /** Get Clock hands angles **/
@@ -97,100 +98,40 @@ Clock.prototype.generate = function() {
     colors = this.options.colors,
     color = colors[this.dayOrNight()],
     svg = this.svg,
-    circle = document.createElementNS(ns, 'circle'),
-    dot = document.createElementNS(ns, 'circle'),
-    hourHand = document.createElementNS(ns, 'line'),
-    minuteHand = document.createElementNS(ns, 'line'),
-    secondHand = document.createElementNS(ns, 'line'),
-    datetext = document.createElementNS(ns, 'text'),
-    digitalclock = document.createElementNS(ns, 'text'),
-    cityName = document.createElementNS(ns, 'text');
-
-  datetext.appendChild(document.createTextNode(this.dateTicker()));
-  digitalclock.appendChild(document.createTextNode(this.dateTicker(true)));
-  cityName.appendChild(document.createTextNode(this.formatCity()));
-
-  /** Set the Attributes **/
-  //Container
-  svg.setAttribute('height', height);
-  svg.setAttribute('width', width);
-
-  //Clock face
-  circle.setAttribute('cx', height / 2);
-  circle.setAttribute('cy', height / 2);
-  circle.setAttribute('r', (height / 2 - (height * 0.035)));
-  circle.setAttribute('fill', 'transparent');
-  circle.setAttribute('stroke', color);
-  circle.setAttribute('stroke-width', (height * 0.035));
-
-  //Clock center dot
-  dot.setAttribute('cx', height / 2);
-  dot.setAttribute('cy', height / 2);
-  dot.setAttribute('r', (height * 0.033));
-  dot.setAttribute('fill', color);
+    compMap = {
+      circle: document.createElementNS(ns, 'circle'),
+      city: document.createElementNS(ns, 'text'),
+      date: document.createElementNS(ns, 'text'),
+      dot: document.createElementNS(ns, 'circle'),
+      hour: document.createElementNS(ns, 'line'),
+      minute: document.createElementNS(ns, 'line'),
+      second: document.createElementNS(ns, 'line'),
+      svg: svg,
+      time: document.createElementNS(ns, 'text')
+    },
+    context = {
+      height: height,
+      width: height,
+      color: color,
+      format: format,
+      position: position,
+      time: time
+    },
+    component, attr;
 
 
-  //Hour Hand
-  hourHand.setAttribute('x1', position);
-  hourHand.setAttribute('y1', position);
-  hourHand.setAttribute('x2', position);
-  hourHand.setAttribute('y2', ((height / 2) - (height / 2 * 0.35)));
-  hourHand.setAttribute('stroke', color);
-  hourHand.setAttribute('stroke-width', (height * 0.04) + 'px');
-  hourHand.setAttribute('stroke-linecap', 'round');
-  hourHand.setAttribute('stroke-opacity', '.4');
-  hourHand.setAttribute('fill', 'transparent');
-  hourHand.setAttribute('transform', 'rotate( ' + time.hour + ' ' + position + ' ' + position + ')');
+  compMap.date.appendChild(document.createTextNode(this.dateTicker()));
+  compMap.time.appendChild(document.createTextNode(this.dateTicker(true)));
+  compMap.city.appendChild(document.createTextNode(this.formatCity()));
 
-  //Minute Hand
-  minuteHand.setAttribute('x1', height / 2);
-  minuteHand.setAttribute('y1', height / 2);
-  minuteHand.setAttribute('x2', height / 2);
-  minuteHand.setAttribute('y2', ((height / 2) - (height / 2 * 0.70)));
-  minuteHand.setAttribute('stroke', color);
-  minuteHand.setAttribute('stroke-width', (height * 0.03) + 'px');
-  minuteHand.setAttribute('stroke-linecap', 'round');
-  minuteHand.setAttribute('stroke-opacity', '.4');
-  minuteHand.setAttribute('fill', 'transparent');
-  minuteHand.setAttribute('transform', 'rotate( ' + time.minute + ' ' + position + ' ' + position + ')');
-
-  //Second Hand
-  secondHand.setAttribute('x1', height / 2);
-  secondHand.setAttribute('y1', height / 2);
-  secondHand.setAttribute('x2', height / 2);
-  secondHand.setAttribute('y2', ((height / 2) - (height / 2 * 0.80)));
-  secondHand.setAttribute('stroke', color);
-  secondHand.setAttribute('stroke-width', (height * 0.01) + 'px');
-  secondHand.setAttribute('stroke-linecap', 'round');
-  secondHand.setAttribute('stroke-opacity', '.4');
-  secondHand.setAttribute('fill', 'transparent');
-  secondHand.setAttribute('transform', 'rotate( ' + time.second + ' ' + position + ' ' + position + ')');
-
-  //Text Date
-  datetext.setAttribute('x', (width * 0.12));
-  datetext.setAttribute('y', ((height / 2) + (height * 0.1)));
-  datetext.setAttribute('font-size', height / 2 * 0.13);
-  datetext.setAttribute('fill', color);
-
-  //Digital clock
-  digitalclock.setAttribute('x', (width * 0.12));
-  digitalclock.setAttribute('y', ((height / 2) + (height * 0.16)));
-  digitalclock.setAttribute('font-size', height / 2 * 0.16);
-  digitalclock.setAttribute('fill', color);
-  digitalclock.setAttribute('class', 'digital');
-
-  //City Name
-  cityName.setAttribute('x', (width * 0.12));
-  cityName.setAttribute('y', ((height / 2) + (height * 0.2)));
-  cityName.setAttribute('font-size', (height / 2 * 0.1));
-  cityName.setAttribute('fill', color);
-  cityName.setAttribute('class', 'digital');
-
-  /** Append the clock to the div **/
-  [circle, datetext, digitalclock, cityName, hourHand, minuteHand, secondHand, dot].forEach(function(component) {
-    svg.appendChild(component);
-  });
-
+  for (component in components) {
+    for(attr in components[component]) {
+      compMap[component].setAttr(attr, parse(components[component][attr])(context));
+    }
+  }
+  for (component in compMap) {
+    svg.appendChild(compMap[component]);
+  }
   el.appendChild(svg);
 };
 
