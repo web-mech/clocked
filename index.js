@@ -51,7 +51,7 @@ function Clock(el, options) {
   this.generate();
 
   if (this.options.autoStart) {
-    this._start();
+    this.start();
   }
 }
 
@@ -230,7 +230,7 @@ Clock.prototype.updateHands = function() {
   window.requestAnimationFrame(this.updateHands.bind(this));
 };
 
-Clock.prototype._start = function() {
+Clock.prototype.start = function() {
   this.timer = window.requestAnimationFrame(this.updateHands.bind(this));
 };
 
