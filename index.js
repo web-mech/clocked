@@ -187,14 +187,9 @@ Clock.prototype.generate = function() {
   cityName.setAttribute('class', 'digital');
 
   /** Append the clock to the div **/
-  svg.appendChild(circle);
-  svg.appendChild(datetext);
-  svg.appendChild(digitalclock);
-  svg.appendChild(cityName);
-  svg.appendChild(hourHand);
-  svg.appendChild(minuteHand);
-  svg.appendChild(secondHand);
-  svg.appendChild(dot);
+  [circle, datetext, digitalclock, cityName, hourHand, minuteHand, secondHand, dot].forEach(function(component) {
+    svg.appendChild(component);
+  });
 
   el.appendChild(svg);
 };
