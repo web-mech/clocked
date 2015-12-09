@@ -73,8 +73,9 @@ Clock.prototype.dayOrNight = function() {
 
 Clock.prototype.dateTicker = function() {
   var city = this.options.city,
-    format = arguments.length ? 'HH:mm' :  'ddd D';
-  return moment.tz(city).format(format);
+    format = arguments.length ? 'HH:mm' :  'ddd D',
+    fn = city && moment.tz || moment;
+  return fn(city).format(format);
 };
 
 Clock.prototype.formatCity = function() {
