@@ -48,8 +48,6 @@ function Clock(el, options) {
     }
   });
 
-  el.appendChild(this.svg);
-
   this.generate();
 
   if (this.options.autoStart) {
@@ -58,11 +56,12 @@ function Clock(el, options) {
 }
 
 Clock.prototype.getTime = function() {
-  var city = this.options.city;
+  var city = this.options.city,
+    fn = city && moment.tz || moment;
   return {
-    hour: (parseInt(moment.tz(city).format('h'), 10) * 30) + (parseInt(moment.tz(city).format('mm'), 10) * 0.5),
-    minute: parseInt(moment.tz(city).format('mm'), 10) * 6,
-    second: parseInt(moment.tz(city).format('ss'), 10) * 6
+    hour: (parseInt(fn(city).format('h'), 10) * 30) + (parseInt(fn(city).format('mm'), 10) * 0.5),
+    minute: parseInt(fn(city).format('mm'), 10) * 6,
+    second: parseInt(fn(city).format('ss'), 10) * 6
   };
 };
 
