@@ -13,37 +13,37 @@
   Clock Description:
     Between 6 am - 5pm, clock color is orange, otherwise gray. 
 **/
-var moment = require('moment-timezone');
+var moment = require('moment-timezone'),
+  extend = require('util')._extend,
+  defaults = {
+    autoStart: true,
+    colors: {
+      'day': '#FF760D',
+      'night': '#005753'
+    }
+  };
 
 function Clock(el, options) {
-  var ns = 'http://www.w3.org/2000/svg',
-  el = el instanceof Node ? el : document.querySelector(el);
+  var ns = 'http://www.w3.org/2000/svg';
 
   Object.defineProperties(this, {
-    id: {
-      value: Date.now(),
+    el: {
+      value: el instanceof Node ? el : document.querySelector(el),
       writable: true
+    },
+    options: {
+      value: options && extend(defaults, options) || defaults
     },
     svgNs: {
       value: ns
     },
-    city: {
+    reqFrame: {
       writable: true
-    },
-    timer: {
-      value: {}
     },
     svg: {
       enumerable: true,
       configurable: true,
       value: document.createElementNS(ns, 'svg'),
-      writable: true
-    },
-    options: {
-      value: options || {}
-    },
-    el: {
-      value: el,
       writable: true
     }
   });
@@ -67,13 +67,14 @@ Clock.prototype.getTime = function() {
 
 
 Clock.prototype.dayOrNight = function() {
-  var city = this.options.city;
-  return parseInt(moment.tz(city).format('HH'), 10) > 17 || parseInt(moment.tz(city).format('HH'), 10) < 6 ? 'night' : 'day';
+  var city = this.options.city,
+    fn = city && moment.tz || moment;
+  return parseInt(fn(city).format('HH'), 10) > 17 || parseInt(fn(city).format('HH'), 10) < 6 ? 'night' : 'day';
 };
 
 Clock.prototype.dateTicker = function() {
   var city = this.options.city,
-    format = arguments.length ? 'HH:mm' :  'ddd D',
+    format = arguments.length ? 'HH:mm' : 'ddd D',
     fn = city && moment.tz || moment;
   return fn(city).format(format);
 };
@@ -92,7 +93,8 @@ Clock.prototype.generate = function() {
     position = height / 2,
     /** Get Clock hands angles **/
     time = this.getTime(),
-    color = this.dayOrNight() === 'night' ? '#005753' : '#FF760D',
+    colors = this.options.colors,
+    color = colors[this.dayOrNight()],
     svg = this.svg,
     circle = document.createElementNS(ns, 'circle'),
     dot = document.createElementNS(ns, 'circle'),
@@ -212,8 +214,9 @@ Clock.prototype.updateHands = function() {
   text[0].innerHTML = this.dateTicker();
   text[1].innerHTML = this.dateTicker(true);
 
-  var color = this.dayOrNight() === 'night' ? '#005753' : '#FF760D';
-  
+  var colors = this.options.colors,
+    color = colors[this.dayOrNight()];
+
   //update hands color
   for (i = 0; i < hands.length; i++) {
     hands[i].setAttribute('stroke', color);
@@ -227,11 +230,11 @@ Clock.prototype.updateHands = function() {
   cir[0].setAttribute('stroke', color);
   cir[1].setAttribute('fill', color);
 
-  window.requestAnimationFrame(this.updateHands.bind(this));
+  this.reqFrame = window.requestAnimationFrame(this.updateHands.bind(this));
 };
 
 Clock.prototype.start = function() {
-  this.timer = window.requestAnimationFrame(this.updateHands.bind(this));
+  this.reqFrame = window.requestAnimationFrame(this.updateHands.bind(this));
 };
 
 module.exports = Clock;

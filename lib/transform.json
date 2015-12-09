@@ -1,0 +1,21 @@
+{
+  "hands": [{
+    "tranform": "format('rotate(%s %s %s)', time.hour, position, position)"
+  }, {
+    "tranform": "format('rotate(%s %s %s)', time.minute, position, position)"
+  }, {
+    "tranform": "format('rotate(%s %s %s)', time.second, position, position)"
+  }],
+  "text": [{
+    "fill": "color"
+  }, {
+    "fill": "color"
+  }, {
+    "fill": "color"
+  }],
+  "circle": [{
+    "stroke": "color"
+  }, {
+    "fill": "color"
+  }]
+}
