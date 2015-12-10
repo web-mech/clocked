@@ -29,6 +29,10 @@ var moment = require('moment-timezone'),
 function Clock(el, options) {
   var ns = 'http://www.w3.org/2000/svg';
 
+  if (!el) {
+    throw new Error('No element given when instantiating clocked.');
+  }
+
   Object.defineProperties(this, {
     el: {
       value: el instanceof Node ? el : document.querySelector(el),
@@ -135,7 +139,7 @@ Clock.prototype.generate = function() {
   el.appendChild(svg);
 };
 
-Clock.prototype.updateHands = function() {
+Clock.prototype.tick = function() {
   var div = this.el,
     cir = div.querySelectorAll('circle'),
     hands = div.querySelectorAll('line'), //Get SVG child nodes (clock hands) 
@@ -168,11 +172,11 @@ Clock.prototype.updateHands = function() {
   cir[0].setAttribute('stroke', color);
   cir[1].setAttribute('fill', color);
 
-  this.reqFrame = window.requestAnimationFrame(this.updateHands.bind(this));
+  this.reqFrame = window.requestAnimationFrame(this.tick.bind(this));
 };
 
 Clock.prototype.start = function() {
-  this.reqFrame = window.requestAnimationFrame(this.updateHands.bind(this));
+  this.reqFrame = window.requestAnimationFrame(this.tick.bind(this));
 };
 
 module.exports = Clock;
