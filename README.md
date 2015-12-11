@@ -36,9 +36,10 @@ clock.start();
 - Element Can be a valid selector a htmlElement (any instance of Node)
 - Options:
 	- autoStart [default true] - Automatically start when instantiated
+  - city [default local] - The city / timezone to set the time for (e.g. America/Los_Angeles)
   - colors (Any valid css color property value will do):
-    - day [default orange] - Color to set the clock during the day. .
-    - night [default gray] - Color to set the clock during the night. Any valid css color property value will do.
+    - day [default orange] - Color to set the clock during the day.
+    - night [default gray] - Color to set the clock during the night.
 
 ###### Clock Default Colors:
 Between 6 am - 5pm, clock color is orange, otherwise gray. The color follows the sun. The colors are overridable
