@@ -133,6 +133,9 @@ Clock.prototype.generate = function() {
       compMap[component].setAttribute(attr, parse(components[component][attr])(context));
     }
   }
+  
+  delete compMap.svg;
+
   for (component in compMap) {
     svg.appendChild(compMap[component]);
   }
