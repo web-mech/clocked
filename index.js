@@ -29,6 +29,12 @@ function Clock(el, options) {
     svgNs: {
       value: ns
     },
+    timeFn: {
+      get: function() {
+        var city = this.options.city;
+        return city && moment.tz || moment;
+      }
+    },
     reqFrame: {
       writable: true
     },
@@ -49,7 +55,7 @@ function Clock(el, options) {
 
 Clock.prototype.getTime = function() {
   var city = this.options.city,
-    fn = city && moment.tz || moment;
+    fn = this.timeFn;
   return {
     hour: (parseInt(fn(city).format('h'), 10) * 30) + (parseInt(fn(city).format('mm'), 10) * 0.5),
     minute: parseInt(fn(city).format('mm'), 10) * 6,
@@ -60,14 +66,14 @@ Clock.prototype.getTime = function() {
 
 Clock.prototype.dayOrNight = function() {
   var city = this.options.city,
-    fn = city && moment.tz || moment;
+    fn = this.timeFn;
   return parseInt(fn(city).format('HH'), 10) > 17 || parseInt(fn(city).format('HH'), 10) < 6 ? 'night' : 'day';
 };
 
 Clock.prototype.dateTicker = function() {
   var city = this.options.city,
     format = arguments.length ? 'HH:mm' : 'ddd D',
-    fn = city && moment.tz || moment;
+    fn = this.timeFn;
   return fn(city).format(format);
 };
 
@@ -115,11 +121,11 @@ Clock.prototype.generate = function() {
   compMap.city.appendChild(document.createTextNode(this.formatCity()));
 
   for (component in components) {
-    for(attr in components[component]) {
+    for (attr in components[component]) {
       compMap[component].setAttribute(attr, parse(components[component][attr])(context));
     }
   }
-  
+
   delete compMap.svg;
 
   for (component in compMap) {
@@ -149,7 +155,7 @@ Clock.prototype.tick = function() {
   [this.dateTicker(), this.dateTicker(true)].forEach(function(formattedDate, idx) {
     text[idx + 1] = formattedDate;
   });
-  
+
   Array.prototype.forEach.call(hands, function(hand) {
     hand.setAttribute('stroke', color);
   });
