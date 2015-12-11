@@ -17,7 +17,7 @@ var moment = require('moment-timezone'),
   extend = require('util')._extend,
   format = require('util').format,
   components = require('./lib/components'),
-  parse = require('angular-expressions'),
+  parse = require('angular-expressions').compile,
   defaults = {
     autoStart: true,
     colors: {
