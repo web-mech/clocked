@@ -114,6 +114,7 @@ Clock.prototype.generate = function() {
       time: document.createElementNS(ns, 'text')
     },
     context = {
+      fill: 'transparent',
       height: height,
       width: height,
       color: color,
