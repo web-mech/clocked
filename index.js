@@ -164,11 +164,11 @@ Clock.prototype.tick = function() {
   var colors = this.options.colors,
     color = colors[this.dayOrNight()];
 
-  Array.prototype.forEach.apply(hands, function(hand) {
+  Array.prototype.forEach.call(hands, function(hand) {
     hand.setAttribute('stroke', color);
   });
 
-  Array.prototype.forEach.apply(text, function(txt) {
+  Array.prototype.forEach.call(text, function(txt) {
     txt.setAttribute('fill', color);
   });
 
