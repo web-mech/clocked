@@ -29,6 +29,11 @@ function Clock(el, options) {
     svgNs: {
       value: ns
     },
+    color: {
+      get: function() {
+        return this.options.colors[this.dayOrNight()];
+      }
+    },
     timeFn: {
       get: function() {
         var city = this.options.city;
@@ -90,8 +95,7 @@ Clock.prototype.generate = function() {
     position = height / 2,
     /** Get Clock hands angles **/
     time = this.getTime(),
-    colors = this.options.colors,
-    color = colors[this.dayOrNight()],
+    color = this.color,
     svg = this.svg,
     compMap = {
       circle: document.createElementNS(ns, 'circle'),
@@ -136,8 +140,7 @@ Clock.prototype.generate = function() {
 
 Clock.prototype.tick = function() {
   var div = this.el,
-    colors = this.options.colors,
-    color = colors[this.dayOrNight()],
+    color = this.color,
     cir = div.querySelectorAll('circle'),
     hands = div.querySelectorAll('line'), //Get SVG child nodes (clock hands) 
     text = div.querySelectorAll('text'),
