@@ -159,8 +159,8 @@ Clock.prototype.tick = function() {
     hands[idx].setAttribute('transform', format(fmt, time, position, position));
   });
 
-  text[0].innerHTML = this.dateTicker();
-  text[1].innerHTML = this.dateTicker(true);
+  text[1].innerHTML = this.dateTicker();
+  text[2].innerHTML = this.dateTicker(true);
 
   var colors = this.options.colors,
     color = colors[this.dayOrNight()];
