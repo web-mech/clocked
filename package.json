@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/web-mech/clocked",
   "dependencies": {
-    "moment-timezone": "^0.4.1"
+    "moment-timezone": "^0.4.1",
+    "angular-expressions": "^0.3.0"
   },
   "devDependencies": {
     "mocha": "^2.3.4",
