@@ -130,6 +130,8 @@ Clock.prototype.generate = function() {
 
 Clock.prototype.tick = function() {
   var div = this.el,
+    colors = this.options.colors,
+    color = colors[this.dayOrNight()],
     cir = div.querySelectorAll('circle'),
     hands = div.querySelectorAll('line'), //Get SVG child nodes (clock hands) 
     text = div.querySelectorAll('text'),
@@ -144,12 +146,10 @@ Clock.prototype.tick = function() {
     hands[idx].setAttribute('transform', format(fmt, time, position, position));
   });
 
-  text[1].innerHTML = this.dateTicker();
-  text[2].innerHTML = this.dateTicker(true);
-
-  var colors = this.options.colors,
-    color = colors[this.dayOrNight()];
-
+  [this.dateTicker(), this.dateTicker(true)].forEach(function(formattedDate, idx) {
+    text[idx + 1] = formattedDate;
+  });
+  
   Array.prototype.forEach.call(hands, function(hand) {
     hand.setAttribute('stroke', color);
   });
@@ -158,8 +158,9 @@ Clock.prototype.tick = function() {
     txt.setAttribute('fill', color);
   });
 
-  cir[0].setAttribute('stroke', color);
-  cir[1].setAttribute('fill', color);
+  ['stroke', 'fill'].forEach(function(attr, idx) {
+    cir[idx].setAttribute(attr, color);
+  });
 
   this.reqFrame = window.requestAnimationFrame(this.tick.bind(this));
 };
