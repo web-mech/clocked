@@ -130,7 +130,7 @@ Clock.prototype.generate = function() {
 
   for (component in components) {
     for(attr in components[component]) {
-      compMap[component].setAttr(attr, parse(components[component][attr])(context));
+      compMap[component].setAttribute(attr, parse(components[component][attr])(context));
     }
   }
   for (component in compMap) {
